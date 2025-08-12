@@ -9,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export default function MainForm() {
   const [images, setImages] = useState([]);
   const [optimizeImage, setOptimizeImage] = useState([]);
-  const [rangeValue, setRangeValue] = useState(80);
+  const [rangeValue, setRangeValue] = useState(70);
   const [error, setError] = useState(null);
 
   const handleRemove = (index) => {
