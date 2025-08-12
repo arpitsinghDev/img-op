@@ -3,11 +3,14 @@ import PreviewImg from "./PreviewImg";
 import axios from "axios";
 import ImageDrag from "./ImageDrag";
 import RangeSlider from "./RangeSlider";
+import DownloadOptimizeFile from "./DownloadOptimizeFile";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function MainForm() {
   const [images, setImages] = useState([]);
+  const [optimizeImage, setOptimizeImage] = useState([]);
   const [rangeValue, setRangeValue] = useState(80);
+  const [error, setError] = useState(null);
 
   const handleRemove = (index) => {
     setImages(images.filter((_, i) => i !== index));
@@ -24,7 +27,7 @@ export default function MainForm() {
     return () => images.forEach((image) => URL.revokeObjectURL(image.preview));
   }, [images]);
   // Optimize & Upload Images
-  const optimizeImages = async () => {
+  const optimizeImagesHandler = async () => {
     if (images.length === 0) {
       alert("No images selected.");
       return;
@@ -38,10 +41,16 @@ export default function MainForm() {
       const res = await axios.post(`${API_URL}upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("Upload Success:", res.data);
+      setOptimizeImage(res.data);
+       setError(null)
     } catch (error) {
-      console.error("Error uploading images:", error);
-    }
+       if (error.response) {
+    console.log(error.response);
+    setError(error.response.data.message); // store in state
+  } else {
+    console.error("Request failed:", error.message);
+  }
+  }
   };
 
   return (
@@ -60,11 +69,13 @@ export default function MainForm() {
           </button>
 
           <button
-            onClick={optimizeImages}
+            onClick={optimizeImagesHandler}
             className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow"
           >
             Optimize
           </button>
+          {error?<h3>{error}</h3>:""}
+          {(optimizeImage.length!=0)?<DownloadOptimizeFile optimizeImage={optimizeImage}/>:""}
         </>
       )}
     </div>

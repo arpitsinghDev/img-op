@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function RangeSlider({ min = 0, max = 100, step = 1 ,value,setRangeValue}) {
+export default function RangeSlider({ min = 0, max = 75, step = 1 ,value,setRangeValue}) {
 // Start at mid-value
 
   return (
